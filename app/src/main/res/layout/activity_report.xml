@@ -90,7 +90,6 @@
                     android:layout_gravity="center"
                     android:textSize="12sp"
                     android:textColor="?android:textColorPrimary"
-                    android:text="- 신분증 마스킹 사진"
                     android:visibility="gone"
                     />
                 <ImageView
@@ -111,7 +110,6 @@
                     android:layout_gravity="center"
                     android:textSize="12sp"
                     android:textColor="?android:textColorPrimary"
-                    android:text="- 신분증 원본 사진"
                     android:visibility="gone"
                     />
                 <ImageView

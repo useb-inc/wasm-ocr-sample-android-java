@@ -7,6 +7,9 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +22,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.JavascriptInterface;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.useb.wasm_ocr_sample_android_java.databinding.ActivityWebViewBinding;
@@ -26,9 +30,11 @@ import com.useb.wasm_ocr_sample_android_java.databinding.ActivityWebViewBinding;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Arrays;
 
 public class WebViewActivity extends AppCompatActivity {
 
@@ -38,11 +44,6 @@ public class WebViewActivity extends AppCompatActivity {
     private WebView webview = null;
     private String OCR_LICENSE_KEY = "FPkTB6QsFFW5YwiqAa2zk5yy0ylLfYSryPM1fnVJKLgWBk6FgEPMBP9RJiCd24ldGurGnkAUPatzrf9Km90ADqjlTF/FHFyculQP21k4pxkfbSRs=";
 
-    private String result = "";
-    private String detail = "";
-    private String status = "";
-    private String maskedImageBase64 = "";
-    private String originalImageBase64 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,6 @@ public class WebViewActivity extends AppCompatActivity {
                 webview.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
-
                         webview.loadUrl("javascript:usebwasmocrreceive('" + encodedUserInfo + "')");
                     }
                 });
@@ -142,64 +142,86 @@ public class WebViewActivity extends AppCompatActivity {
         return encodedURI;
     }
 
-
     @JavascriptInterface
     public void receive(String data) throws JSONException {
 
-        String decodedData = decodedReceiveData(data);
-        JSONObject JsonObject = new JSONObject(decodedData);
+        try {
+            Intent intent = new Intent(WebViewActivity.this, ReportActivity.class);
 
-        String reviewResult = JsonObject.getString("review_result");
-        JSONObject reviewResultJsonObject = new JSONObject(reviewResult);
+            String decodedData = decodedReceiveData(data);
 
-        String ocrType = reviewResultJsonObject.getString("ocr_type");
-        if (ocrType.equals("idcard")) {
-            ocrType = "주민증록증/운전면허증";
-        } else if (ocrType.equals("passport")) {
-            ocrType = "국내/해외여권";
-        } else if (ocrType.equals("alien")) {
-            ocrType = "외국인등록증";
-        } else if (ocrType.equals("credit")) {
-            ocrType = "신용카드";
-        } else {
-            ocrType = "INVALID_TYPE";
-        }
-        String resultData = JsonObject.getString("result");
+            JSONObject jsonData = new JSONObject(decodedData);
+            JSONObject reviewResult = new JSONObject(jsonData.getString("review_result"));
 
-        if (resultData.equals("success")) {
-//            if (reviewResultJsonObject.has("ocr_origin_image")) {
-//                originalImageBase64 = reviewResultJsonObject.getString("ocr_origin_image");
-//            }
-//            if (reviewResultJsonObject.has("ocr_masking_image")) {
-//                maskedImageBase64 = reviewResultJsonObject.getString("ocr_masking_image");
-//            }
+            String ocrType = reviewResult.getString("ocr_type");
+            if (ocrType.equals("idcard")) {
+                ocrType = "주민증록증/운전면허증";
+            } else if (ocrType.equals("passport")) {
+                ocrType = "국내/해외여권";
+            } else if (ocrType.equals("alien")) {
+                ocrType = "외국인등록증";
+            } else if (ocrType.equals("credit")) {
+                ocrType = "신용카드";
+            } else {
+                ocrType = "INVALID_TYPE";
+            }
+            String result = jsonData.getString("result");
 
-            try {
-                JsonObject = ModifyReviewResult(JsonObject);
-            } catch (JSONException e) {
+            if (result.equals("success")) {
+                if (reviewResult.has("ocr_origin_image")) {
+                    String b64 = reviewResult.getString("ocr_origin_image");
+                    if (!b64.equals("null")) {
+                        b64 = b64.substring(b64.indexOf(",") + 1);
+                        byte[] byteArray = getByteArrayFromBase64String(b64);
+                        intent.putExtra("originalImage", byteArray);
+                    }
+                }
+                if (reviewResult.has("ocr_masking_image")) {
+                    String b64 = reviewResult.getString("ocr_masking_image");
+                    if (!b64.equals("null")) {
+                        b64 = b64.substring(b64.indexOf(",") + 1);
+                        byte[] byteArray = getByteArrayFromBase64String(b64);
+                        intent.putExtra("maskedImage", byteArray);
+                    }
+                }
+
+                JSONObject modifiedJsonData = ModifyReviewResult(jsonData);
+
+                intent.putExtra("status", "OCR이 완료되었습니다.");
+                intent.putExtra("result", "- 인증 결과 : 성공\n- OCR 종류 : " + ocrType);
+                intent.putExtra("detail", modifiedJsonData.toString(4));
+            } else if (result.equals("failed")) {
+                intent.putExtra("status", "OCR이 실패되었습니다.");
+                intent.putExtra("result", "- 인증 결과 : 실패\n- OCR 종류 : " + ocrType);
+                intent.putExtra("detail", jsonData.toString(4));
             }
 
-            status = "OCR이 완료되었습니다.";
-            result = "- 인증 결과 : 성공\n- OCR 종류 : " + ocrType;
-            Log.d("success", result);
-        } else if (resultData.equals("failed")) {
-            status = "OCR이 실패되었습니다.";
-            result = "- 인증 결과 : 실패\n- OCR 종류 : " + ocrType;
-            Log.d("failed", result);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            startActivity(intent);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e("EXCEPTION!!!!!!!", e.getMessage());
+            e.printStackTrace();
         }
+    }
 
-        detail = Base64.encodeToString(JsonObject.toString(4).getBytes(), 0);
+    private byte[] getByteArrayFromBase64String(String str) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Bitmap bitmap = getBitmapFromBase64String(str);
+        float scale = (float) (1024 / 2 / (float) bitmap.getWidth());
+        int image_w = (int) (bitmap.getWidth() * scale);
+        int image_h = (int) (bitmap.getHeight() * scale);
+        Bitmap resize = Bitmap.createScaledBitmap(bitmap, image_w, image_h, true);
+        resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        return stream.toByteArray();
+    }
 
-
-        Intent intent = new Intent(getApplicationContext(), ReportActivity.class);
-        intent.putExtra("status", status);
-        intent.putExtra("result", result);
-        intent.putExtra("detail", detail);
-//        intent.putExtra("maskedImageBase64", maskedImageBase64);
-//        intent.putExtra("originalImageBase64", originalImageBase64);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        startActivity(intent);
+    private Bitmap getBitmapFromBase64String(String str) {
+        byte[] decodedString = Base64.decode(str.getBytes(), Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
     private JSONObject ModifyReviewResult(JSONObject JsonObject) throws JSONException {
