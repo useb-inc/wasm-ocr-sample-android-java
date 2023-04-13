@@ -34,11 +34,14 @@ public class MainActivity extends AppCompatActivity {
         binding.btnPassport.setOnClickListener(btnOnclickListener);
         binding.btnAlien.setOnClickListener(btnOnclickListener);
         binding.btnCredit.setOnClickListener(btnOnclickListener);
+        binding.btnIdcardSsa.setOnClickListener(btnOnclickListener);
+        binding.btnPassportSsa.setOnClickListener(btnOnclickListener);
+        binding.btnAlienSsa.setOnClickListener(btnOnclickListener);
     }
 
     private boolean isValid(String scanType) {
         ArrayList<String> types = new ArrayList<String>(
-                Arrays.asList("idcard", "passport", "alien", "credit"));
+                Arrays.asList("idcard", "passport", "alien", "credit", "idcard-ssa", "passport-ssa", "alien-ssa"));
 
         return types.contains(scanType);
     }
