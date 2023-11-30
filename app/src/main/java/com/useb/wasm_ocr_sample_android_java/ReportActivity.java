@@ -65,7 +65,6 @@ public class ReportActivity extends AppCompatActivity {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
                 TextView tv = findViewById(R.id.textOriginalImage);
                 if (reviewResult.getString("ocr_type").equals("credit")) {
-
                     tv.setText("- 신용카드 원본 사진");
                 } else {
                     tv.setText("- 신분증 원본 사진");
@@ -74,6 +73,18 @@ public class ReportActivity extends AppCompatActivity {
                 ImageView iv = findViewById(R.id.originalImageView);
                 iv.setVisibility(View.VISIBLE);
                 iv.setImageBitmap(bitmap);
+            } else if (getIntent().hasExtra("originalImageEncrypted")) {
+                String encryptedImage = getIntent().getStringExtra("originalImageEncrypted");
+                TextView tv = findViewById(R.id.textOriginalImage);
+                if (reviewResult.getString("ocr_type").equals("credit")) {
+                    tv.setText("- 신용카드 원본 사진");
+                } else {
+                    tv.setText("- 신분증 원본 사진");
+                }
+                tv.setVisibility(View.VISIBLE);
+                TextView tv2 = findViewById(R.id.textEncryptedOriginal);
+                tv2.setText(encryptedImage);
+                tv2.setVisibility(View.VISIBLE);
             }
 
             if (getIntent().hasExtra("maskedImage")) {
@@ -91,6 +102,18 @@ public class ReportActivity extends AppCompatActivity {
                 ImageView iv = findViewById(R.id.maskedImageView);
                 iv.setVisibility(View.VISIBLE);
                 iv.setImageBitmap(bitmap);
+            } else if (getIntent().hasExtra("maskedImageEncrypted")) {
+                String encryptedImage = getIntent().getStringExtra("maskedImageEncrypted");
+                TextView tv = findViewById(R.id.textMaskImage);
+                if (reviewResult.getString("ocr_type").equals("credit")) {
+                    tv.setText("- 신용카드 원본 사진");
+                } else {
+                    tv.setText("- 신분증 원본 사진");
+                }
+                tv.setVisibility(View.VISIBLE);
+                TextView tv2 = findViewById(R.id.textEncryptedMaskImage);
+                tv2.setText(encryptedImage);
+                tv2.setVisibility(View.VISIBLE);
             }
 
             TextView detailTv = findViewById(R.id.detail);

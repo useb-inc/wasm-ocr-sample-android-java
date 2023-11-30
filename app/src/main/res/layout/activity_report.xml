@@ -101,6 +101,15 @@
                     android:layout_marginTop="8dp"
                     android:visibility="gone"
                     />
+                <TextView
+                    android:id="@+id/textEncryptedMaskImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="?android:textColorPrimary"
+                    android:visibility="gone"
+                    />
 
                 <TextView
                     android:id="@+id/textOriginalImage"
@@ -119,6 +128,16 @@
                     android:layout_gravity="center"
                     android:maxHeight="200dp"
                     android:layout_marginTop="8dp"
+                    android:visibility="gone"
+                    />
+                <TextView
+                    android:id="@+id/textEncryptedOriginal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="?android:textColorPrimary"
                     android:visibility="gone"
                     />
             </LinearLayout>

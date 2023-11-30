@@ -171,17 +171,26 @@ public class WebViewActivity extends AppCompatActivity {
                 if (reviewResult.has("ocr_origin_image")) {
                     String b64 = reviewResult.getString("ocr_origin_image");
                     if (!b64.equals("null")) {
-                        b64 = b64.substring(b64.indexOf(",") + 1);
-                        byte[] byteArray = getByteArrayFromBase64String(b64);
-                        intent.putExtra("originalImage", byteArray);
+                        if (b64.startsWith("data:image/")) {
+                            b64 = b64.substring(b64.indexOf(",") + 1);
+                            byte[] byteArray = getByteArrayFromBase64String(b64);
+                            intent.putExtra("originalImage", byteArray);
+                        } else {
+                            intent.putExtra("originalImageEncrypted", "Encrypted");
+                        }
+
                     }
                 }
                 if (reviewResult.has("ocr_masking_image")) {
                     String b64 = reviewResult.getString("ocr_masking_image");
                     if (!b64.equals("null")) {
-                        b64 = b64.substring(b64.indexOf(",") + 1);
-                        byte[] byteArray = getByteArrayFromBase64String(b64);
-                        intent.putExtra("maskedImage", byteArray);
+                        if (b64.startsWith("data:image/")) {
+                            b64 = b64.substring(b64.indexOf(",") + 1);
+                            byte[] byteArray = getByteArrayFromBase64String(b64);
+                            intent.putExtra("maskedImage", byteArray);
+                        } else {
+                            intent.putExtra("maskedImageEncrypted", "Encrypted");
+                        }
                     }
                 }
 
