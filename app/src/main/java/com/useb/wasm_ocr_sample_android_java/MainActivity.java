@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent secondIntent = new Intent(getApplicationContext(), WebViewActivity.class);
-            if(sendDataToWebview(secondIntent, view.getTag().toString()))
+            if(sendDataToWebview(secondIntent, view.getTag().toString(), binding.btnEncryptMode.isChecked()))
                 startActivity(secondIntent);
         }
     };
@@ -46,10 +46,11 @@ public class MainActivity extends AppCompatActivity {
         return types.contains(scanType);
     }
 
-    private boolean sendDataToWebview(Intent secondIntent, String scanType){
+    private boolean sendDataToWebview(Intent secondIntent, String scanType, boolean useEncryptMode){
         if (!isValid(scanType)) return false;
 
         secondIntent.putExtra("scanType", scanType);
+        secondIntent.putExtra("useEncryptMode", useEncryptMode ? "true" : "false");
         return true;
     }
 }

@@ -42,7 +42,7 @@ public class WebViewActivity extends AppCompatActivity {
     private ActivityWebViewBinding binding;
     private Handler handler = new Handler();
     private WebView webview = null;
-    private String OCR_LICENSE_KEY = "FPkTB6QsFFW5YwiqAa2zk5yy0ylLfYSryPM1fnVJKLgWBk6FgEPMBP9RJiCd24ldGurGnkAUPatzrf9Km90ADqjlTF/FHFyculQP21k4pxkfbSRs=";
+    private String OCR_LICENSE_KEY = "FPkTBLFIa/Tn/mCZ5WKPlcuDxyb2bJVPSURXacnhj2d82wm39/tFIjCPpMsiXoPxGbN6G6l5gSLMBfwB6nwgIJZFWX0WlS1Jl49321wADP7yEhxE=";
 
 
     @Override
@@ -122,6 +122,7 @@ public class WebViewActivity extends AppCompatActivity {
     private JSONObject dataToJson(String ocrType) throws JSONException {
         JSONObject settings = new JSONObject();
         settings.put("licenseKey", this.OCR_LICENSE_KEY);
+        settings.put("useEncryptMode", getIntent().getStringExtra("useEncryptMode"));
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("ocrType", ocrType);
@@ -171,17 +172,26 @@ public class WebViewActivity extends AppCompatActivity {
                 if (reviewResult.has("ocr_origin_image")) {
                     String b64 = reviewResult.getString("ocr_origin_image");
                     if (!b64.equals("null")) {
-                        b64 = b64.substring(b64.indexOf(",") + 1);
-                        byte[] byteArray = getByteArrayFromBase64String(b64);
-                        intent.putExtra("originalImage", byteArray);
+                        if (b64.startsWith("data:image/")) {
+                            b64 = b64.substring(b64.indexOf(",") + 1);
+                            byte[] byteArray = getByteArrayFromBase64String(b64);
+                            intent.putExtra("originalImage", byteArray);
+                        } else {
+                            intent.putExtra("originalImageEncrypted", "Encrypted");
+                        }
+
                     }
                 }
                 if (reviewResult.has("ocr_masking_image")) {
                     String b64 = reviewResult.getString("ocr_masking_image");
                     if (!b64.equals("null")) {
-                        b64 = b64.substring(b64.indexOf(",") + 1);
-                        byte[] byteArray = getByteArrayFromBase64String(b64);
-                        intent.putExtra("maskedImage", byteArray);
+                        if (b64.startsWith("data:image/")) {
+                            b64 = b64.substring(b64.indexOf(",") + 1);
+                            byte[] byteArray = getByteArrayFromBase64String(b64);
+                            intent.putExtra("maskedImage", byteArray);
+                        } else {
+                            intent.putExtra("maskedImageEncrypted", "Encrypted");
+                        }
                     }
                 }
 
@@ -231,6 +241,7 @@ public class WebViewActivity extends AppCompatActivity {
 
         String originalImage = reviewResultJsonObject.getString("ocr_origin_image");
         String maskingImage = reviewResultJsonObject.getString("ocr_masking_image");
+        String faceImage = reviewResultJsonObject.getString("ocr_face_image");
 
         if (originalImage != "null") {
             originalImage = originalImage.substring(0, 20) + "...생략(omit)...";
@@ -239,6 +250,10 @@ public class WebViewActivity extends AppCompatActivity {
         if (maskingImage != "null") {
             maskingImage = maskingImage.substring(0, 20) + "...생략(omit)...";
             reviewResultJsonObject.put("ocr_masking_image", maskingImage);
+        }
+        if (faceImage != "null") {
+            faceImage = faceImage.substring(0, 20) + "...생략(omit)...";
+            reviewResultJsonObject.put("ocr_face_image", faceImage);
         }
 
         JsonObject.put("review_result", reviewResultJsonObject);
