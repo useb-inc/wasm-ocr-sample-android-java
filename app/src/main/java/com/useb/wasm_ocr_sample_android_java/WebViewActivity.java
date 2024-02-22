@@ -59,6 +59,7 @@ public class WebViewActivity extends AppCompatActivity {
         binding.btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                webview.destroy();
                 finish();
             }
         });
