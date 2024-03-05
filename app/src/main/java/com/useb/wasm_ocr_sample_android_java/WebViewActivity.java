@@ -35,6 +35,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class WebViewActivity extends AppCompatActivity {
 
@@ -123,7 +124,7 @@ public class WebViewActivity extends AppCompatActivity {
     private JSONObject dataToJson(String ocrType) throws JSONException {
         JSONObject settings = new JSONObject();
         settings.put("licenseKey", this.OCR_LICENSE_KEY);
-        settings.put("useEncryptMode", getIntent().getStringExtra("useEncryptMode"));
+        settings.put("useEncryptMode", Objects.equals(getIntent().getStringExtra("useEncryptMode"), "true"));
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("ocrType", ocrType);
