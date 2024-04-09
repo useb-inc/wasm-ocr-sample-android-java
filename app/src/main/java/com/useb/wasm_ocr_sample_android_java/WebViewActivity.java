@@ -42,7 +42,8 @@ public class WebViewActivity extends AppCompatActivity {
     private ActivityWebViewBinding binding;
     private Handler handler = new Handler();
     private WebView webview = null;
-    private String OCR_LICENSE_KEY = "FPkTB6QsFFW5YwiqAa2zk5yy0ylLfYSryPM1fnVJKLgWBk6FgEPMBP9RJiCd24ldGurGnkAUPatzrf9Km90ADqjlTF/FHFyculQP21k4pxkfbSRs=";
+    private String OCR_LICENSE_KEY = "FPkTB86ym/u+5Gr2Ffvg5BnN8Jh2J64u8l920gwXmvv5/dxlwtGKhNiw9/aeBXRRSYE+5ylxEWRzk4sD8wAbS5xHeZXBw7o9H2fsoxx0FicsaNh0=";
+    private String OCR_RESOURCE_BASE_URL = "file:///android_asset/";
 
 
     @Override
@@ -50,7 +51,7 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
 
-        String url = "https://ocr.useb.co.kr/ocr.html";
+        String url = "file:///android_asset/ocr.html";
 
         // 바인딩 설정
         binding = ActivityWebViewBinding.inflate(getLayoutInflater());
@@ -70,6 +71,12 @@ public class WebViewActivity extends AppCompatActivity {
         webview.addJavascriptInterface(this, "usebwasmocr");
         webview.getSettings().setAppCacheEnabled(false);
         webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+
+        // 파일 유형 설정
+        webview.getSettings().setAllowFileAccess(true); // 파일 액세스 허용
+        webview.getSettings().setAllowFileAccessFromFileURLs(true); // 파일 URL로부터의 액세스 허용
+        webview.getSettings().setAllowUniversalAccessFromFileURLs(true); // 모든 파일로부터의 액세스 허용
+
         // 사용자 데이터 인코딩
         String encodedUserInfo = encodeJson();
 
@@ -122,6 +129,7 @@ public class WebViewActivity extends AppCompatActivity {
     private JSONObject dataToJson(String ocrType) throws JSONException {
         JSONObject settings = new JSONObject();
         settings.put("licenseKey", this.OCR_LICENSE_KEY);
+        settings.put("resourceBaseUrl", this.OCR_RESOURCE_BASE_URL);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("ocrType", ocrType);
@@ -240,6 +248,7 @@ public class WebViewActivity extends AppCompatActivity {
 
         String originalImage = reviewResultJsonObject.getString("ocr_origin_image");
         String maskingImage = reviewResultJsonObject.getString("ocr_masking_image");
+        String faceImage = reviewResultJsonObject.getString("ocr_face_image");
 
         if (originalImage != "null") {
             originalImage = originalImage.substring(0, 20) + "...생략(omit)...";
@@ -248,6 +257,10 @@ public class WebViewActivity extends AppCompatActivity {
         if (maskingImage != "null") {
             maskingImage = maskingImage.substring(0, 20) + "...생략(omit)...";
             reviewResultJsonObject.put("ocr_masking_image", maskingImage);
+        }
+        if (faceImage != "null") {
+            faceImage = faceImage.substring(0, 20) + "...생략(omit)...";
+            reviewResultJsonObject.put("ocr_face_image", faceImage);
         }
 
         JsonObject.put("review_result", reviewResultJsonObject);
