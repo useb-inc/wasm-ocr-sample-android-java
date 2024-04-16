@@ -45,13 +45,14 @@ public class WebViewActivity extends AppCompatActivity {
     private String OCR_LICENSE_KEY = "FPkTB86ym/u+5Gr2Ffvg5BnN8Jh2J64u8l920gwXmvv5/dxlwtGKhNiw9/aeBXRRSYE+5ylxEWRzk4sD8wAbS5xHeZXBw7o9H2fsoxx0FicsaNh0=";
     private String OCR_RESOURCE_BASE_URL = "file:///android_asset/";
 
+    private String url = "file:///android_asset/ocr.html";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
 
-        String url = "file:///android_asset/ocr.html";
 
         // 바인딩 설정
         binding = ActivityWebViewBinding.inflate(getLayoutInflater());
@@ -102,7 +103,6 @@ public class WebViewActivity extends AppCompatActivity {
 
                 // 카메라 권한 요청
                 cameraAuthRequest();
-                webview.loadUrl(url);
                 webview.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
@@ -314,17 +314,21 @@ public class WebViewActivity extends AppCompatActivity {
         int cameraPermissionCheck = ContextCompat.checkSelfPermission(WebViewActivity.this, Manifest.permission.CAMERA);
         if (cameraPermissionCheck != PackageManager.PERMISSION_GRANTED) { // 권한이 없는 경우
             ActivityCompat.requestPermissions(WebViewActivity.this, new String[]{Manifest.permission.CAMERA}, 1000);
+        } else {
+            webview.loadUrl(url);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if (requestCode == 1000) {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(WebViewActivity.this, "카메라/갤러리 접근 권한이 없습니다. 권한 허용 후 이용해주세요. no access permission for camera and gallery.", Toast.LENGTH_SHORT).show();
                 finish();
+            } else {
+                webview.loadUrl(url);
             }
         }
     }
