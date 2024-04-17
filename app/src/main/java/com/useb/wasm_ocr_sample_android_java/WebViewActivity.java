@@ -42,7 +42,7 @@ public class WebViewActivity extends AppCompatActivity {
     private ActivityWebViewBinding binding;
     private Handler handler = new Handler();
     private WebView webview = null;
-    private String OCR_LICENSE_KEY = "FPkTBLFIa/Tn/mCZ5WKPlcuDxyb2bJVPSURXacnhj2d82wm39/tFIjCPpMsiXoPxGbN6G6l5gSLMBfwB6nwgIJZFWX0WlS1Jl49321wADP7yEhxE=";
+    private String OCR_LICENSE_KEY = "FPkTB86ym/u+5Gr2Ffvg5BnN8Jh2J64u8l920gwXmvv5/dxlwtGKhNiw9/aeBXRRSYE+5ylxEWRzk4sD8wAbS5xHeZXBw7o9H2fsoxx0FicsaNh0=";
 
     String url = "https://ocr.useb.co.kr/ocr.html";
 
