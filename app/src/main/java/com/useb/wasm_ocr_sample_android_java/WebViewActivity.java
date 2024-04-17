@@ -158,13 +158,13 @@ public class WebViewActivity extends AppCompatActivity {
             JSONObject reviewResult = new JSONObject(jsonData.getString("review_result"));
 
             String ocrType = reviewResult.getString("ocr_type");
-            if (ocrType.equals("idcard")) {
+            if (ocrType.startsWith("idcard")) {
                 ocrType = "주민증록증/운전면허증";
-            } else if (ocrType.equals("passport")) {
+            } else if (ocrType.startsWith("passport")) {
                 ocrType = "국내/해외여권";
-            } else if (ocrType.equals("alien")) {
+            } else if (ocrType.startsWith("alien")) {
                 ocrType = "외국인등록증";
-            } else if (ocrType.equals("credit")) {
+            } else if (ocrType.startsWith("credit")) {
                 ocrType = "신용카드";
             } else {
                 ocrType = "INVALID_TYPE";
