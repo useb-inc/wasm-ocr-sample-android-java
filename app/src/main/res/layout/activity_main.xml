@@ -201,6 +201,19 @@
                 android:textColor="@color/white"
                 android:tag="credit"
                 />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/btn_encrypt_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="50dp"
+                android:background="@color/blue"
+                android:buttonTint="#FFFFFF"
+                android:text="암호화 모드 사용 여부"
+                android:textColor="@color/white" />
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
