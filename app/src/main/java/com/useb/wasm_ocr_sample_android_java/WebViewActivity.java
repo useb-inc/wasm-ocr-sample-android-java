@@ -42,9 +42,10 @@ public class WebViewActivity extends AppCompatActivity {
     private ActivityWebViewBinding binding;
     private Handler handler = new Handler();
     private WebView webview = null;
-    private String OCR_LICENSE_KEY = "FPkTBLFIa/Tn/mCZ5WKPlcuDxyb2bJVPSURXacnhj2d82wm39/tFIjCPpMsiXoPxGbN6G6l5gSLMBfwB6nwgIJZFWX0WlS1Jl49321wADP7yEhxE=";
+    private String OCR_LICENSE_KEY = "FPkTB86ym/u+5Gr2Ffvg5BnN8Jh2J64u8l920gwXmvv5/dxlwtGKhNiw9/aeBXRRSYE+5ylxEWRzk4sD8wAbS5xHeZXBw7o9H2fsoxx0FicsaNh0=";
+    private String OCR_RESOURCE_BASE_URL = "file:///android_asset/";
 
-    String url = "https://ocr.useb.co.kr/ocr.html";
+    private String url = "file:///android_asset/ocr.html";
 
 
     @Override
@@ -74,6 +75,12 @@ public class WebViewActivity extends AppCompatActivity {
         webview.addJavascriptInterface(this, "usebwasmocr");
         webview.getSettings().setAppCacheEnabled(false);
         webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+
+        // 파일 유형 설정
+        webview.getSettings().setAllowFileAccess(true); // 파일 액세스 허용
+        webview.getSettings().setAllowFileAccessFromFileURLs(true); // 파일 URL로부터의 액세스 허용
+        webview.getSettings().setAllowUniversalAccessFromFileURLs(true); // 모든 파일로부터의 액세스 허용
+
         // 사용자 데이터 인코딩
         String encodedUserInfo = encodeJson();
 
@@ -126,6 +133,7 @@ public class WebViewActivity extends AppCompatActivity {
         JSONObject settings = new JSONObject();
         settings.put("licenseKey", this.OCR_LICENSE_KEY);
         settings.put("useEncryptMode", Objects.equals(getIntent().getStringExtra("useEncryptMode"), "true"));
+        settings.put("resourceBaseUrl", this.OCR_RESOURCE_BASE_URL);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("ocrType", ocrType);
