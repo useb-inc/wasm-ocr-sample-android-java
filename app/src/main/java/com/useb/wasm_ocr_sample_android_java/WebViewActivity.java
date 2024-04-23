@@ -42,9 +42,10 @@ public class WebViewActivity extends AppCompatActivity {
     private ActivityWebViewBinding binding;
     private Handler handler = new Handler();
     private WebView webview = null;
-    private String OCR_LICENSE_KEY = "FPkTB86ym/u+5Gr2Ffvg5BnN8Jh2J64u8l920gwXmvv5/dxlwtGKhNiw9/aeBXRRSYE+5ylxEWRzk4sD8wAbS5xHeZXBw7o9H2fsoxx0FicsaNh0=";
+    private String OCR_LICENSE_KEY = "FPkTEu6kIucM6wbUyXwzJOeLpavPS02tx9ZVGZ/svkHHCqlZ4sOhlMlPfBHO+VTcEaflxAeUNa3u6daam5hWM9xhhfdD9ydwTBrd+G2swjFHsLg+gdavYDc8VGFIly4uGs3N66MLaqgEA7Ei/H2zPd3TpzbXgo/LFJSpMysVwx85lumcNMQqlt0Y7EHvJSMjcT7T0nhfHBXaACe0sLdfYcIdlAYcr8Z/K6W6ThYa6gLzQNpzfNzxUHzRXOXFJ6NvUWP7e/NnS27iajRHBDYzF4lOKwwu+sID8sbxzscPXBIuEeI9zL1Moq5dR1BkCeY9wu2gSEtYU0FvxsQKwFMUWz868dQXVDh7wS0ZopBBL+Owon2kv+40tyyYDF7d/1uETf0gYwcXkU5kSFJE/ta5rwui0U4McE7PONgE8XuU9T8pNWBw=";
 
-    String url = "https://ocr.useb.co.kr/ocr.html";
+    private String OCR_RESOURCE_BASE_URL = "https://mdev.nhqv.com/static/plugins/ocrWasmDev/sdk/";
+    String url = "https://mdev.nhqv.com/static/plugins/ocrWasmDev/sdk/ocr.html";
 
 
     @Override
@@ -125,6 +126,7 @@ public class WebViewActivity extends AppCompatActivity {
     private JSONObject dataToJson(String ocrType) throws JSONException {
         JSONObject settings = new JSONObject();
         settings.put("licenseKey", this.OCR_LICENSE_KEY);
+        settings.put("resourceBaseUrl", this.OCR_RESOURCE_BASE_URL);
         settings.put("useEncryptMode", Objects.equals(getIntent().getStringExtra("useEncryptMode"), "true"));
 
         JSONObject jsonObject = new JSONObject();
