@@ -47,7 +47,6 @@ public class WebViewActivity extends AppCompatActivity {
 
     private String url = "file:///android_asset/ocr.html";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +105,7 @@ public class WebViewActivity extends AppCompatActivity {
                 webview.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
+                        webview.clearCache( true );
                         webview.loadUrl("javascript:usebwasmocrreceive('" + encodedUserInfo + "')");
                     }
                 });
