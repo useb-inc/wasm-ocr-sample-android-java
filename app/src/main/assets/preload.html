@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>OCR/SSA WebAssembly Sample</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="./css/preload.css?ver=2024-05-02&timestamp=1714617859007" />
+
+    <script type="text/javascript" src="./js/util.js?ver=2024-05-02&timestamp=1714617859007"></script>
+    <script type="text/javascript" src="./lib/lodash.min.js?ver=2024-05-02&timestamp=1714617859007"></script>
+  </head>
+
+  <body>
+    <div id="debug_win" class="debug_win" style="display: none"></div>
+    <div
+      id="loading-ui"
+      class="fullscreen"
+      style="
+        display: none;
+        background: rgba(0, 0, 0, 0.4);
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        color: white;
+      "
+    >
+      LOADING ....
+    </div>
+
+    <section id="simulator-section" class="simulator-section customer--section">
+      <section class="button-section">
+<!--        <button id="btnPreloadingStart">-->
+<!--          <i class="fa-solid fa-check" style="display: none"></i>-->
+<!--          <span>Preloading Start</span>-->
+<!--        </button>-->
+
+        <fieldset>
+          <legend>Preloading Status</legend>
+          <div>
+            <input type="text" id="preloading-status-text" readonly />
+          </div>
+        </fieldset>
+      </section>
+
+      <section class="type-section">
+        <div id="type-toggle">
+          <b>OCR Type</b>
+          <span>[접기]</span>
+          <i class="chevron fa-solid fa-chevron-down"></i>
+        </div>
+
+        <div class="type-button">
+          <button id="startOcrButton">신분증 촬영 시작</button>
+        </div>
+      </section>
+
+      <!-- 이미지 스캔 카메라 섹션 -->
+      <section class="scan-section">
+        <iframe id="resolution-simulation-iframe" class="resolution-simulation-iframe" allow="camera"></iframe>
+      </section>
+
+      <!-- 옵션 세팅 섹션 -->
+    </section>
+
+    <section id="result-section" class="fullscreen result-section" style="display: none">
+      <div class="custom--header">useB.OCR WebAssembly SDK Test Result</div>
+
+      <div class="custom--section">
+        <div id="ocr_status" class="custom--headline"></div>
+      </div>
+
+      <div class="custom--section">
+        <button class="custom--btn" id="restart_btn">처음부터 다시하기</button>
+      </div>
+
+      <div class="custom--division"></div>
+
+      <div id="ocr_result" class="custom--section"></div>
+    </section>
+
+    <script type="module" src="./preload.js?ver=2024-05-02&timestamp=1714617859007" async></script>
+  </body>
+</html>

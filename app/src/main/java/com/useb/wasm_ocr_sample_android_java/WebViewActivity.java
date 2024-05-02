@@ -42,10 +42,8 @@ public class WebViewActivity extends AppCompatActivity {
     private ActivityWebViewBinding binding;
     private Handler handler = new Handler();
     private WebView webview = null;
-    private String OCR_LICENSE_KEY = "FPkTB86ym/u+5Gr2Ffvg5BnN8Jh2J64u8l920gwXmvv5/dxlwtGKhNiw9/aeBXRRSYE+5ylxEWRzk4sD8wAbS5xHeZXBw7o9H2fsoxx0FicsaNh0=";
-    private String OCR_RESOURCE_BASE_URL = "file:///android_asset/";
 
-    private String url = "file:///android_asset/ocr.html";
+    private String url = "file:///android_asset/preload.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +104,7 @@ public class WebViewActivity extends AppCompatActivity {
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         webview.clearCache( true );
-                        webview.loadUrl("javascript:usebwasmocrreceive('" + encodedUserInfo + "')");
+                        webview.loadUrl("javascript:usebwasmocrpreload('" + encodedUserInfo + "')");
                     }
                 });
             }
@@ -131,9 +129,7 @@ public class WebViewActivity extends AppCompatActivity {
 
     private JSONObject dataToJson(String ocrType) throws JSONException {
         JSONObject settings = new JSONObject();
-        settings.put("licenseKey", this.OCR_LICENSE_KEY);
         settings.put("useEncryptMode", Objects.equals(getIntent().getStringExtra("useEncryptMode"), "true"));
-        settings.put("resourceBaseUrl", this.OCR_RESOURCE_BASE_URL);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("ocrType", ocrType);
