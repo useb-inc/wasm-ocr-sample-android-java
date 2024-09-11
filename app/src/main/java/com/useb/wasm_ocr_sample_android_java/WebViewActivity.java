@@ -42,7 +42,7 @@ public class WebViewActivity extends AppCompatActivity {
     private ActivityWebViewBinding binding;
     private Handler handler = new Handler();
     private WebView webview = null;
-    private String OCR_LICENSE_KEY = "FPkTB86ym/u+5Gr2Ffvg5BnN8Jh2J64u8l920gwXmvv5/dxlwtGKhNiw9/aeBXRRSYE+5ylxEWRzk4sD8wAbS5xHeZXBw7o9H2fsoxx0FicsaNh0=";
+    private String OCR_LICENSE_KEY = "FPkTBy1ORaD3oNvT1ynhFOoEDnSPMrHBqXuU2ZcPaB8MSg0EofgZC15Z4hd0hIwAv73LHcG1ZGXNEJWmKK0zt7VWPH3jG3/ug5N7oth3Owh1TqgU=";
 
     String url = "https://ocr.useb.co.kr/ocr.html";
 
@@ -303,6 +303,11 @@ public class WebViewActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            @Override
+            public Bitmap getDefaultVideoPoster() {
+                return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
+            }
         });
         int cameraPermissionCheck = ContextCompat.checkSelfPermission(WebViewActivity.this, Manifest.permission.CAMERA);
         if (cameraPermissionCheck != PackageManager.PERMISSION_GRANTED) { // 권한이 없는 경우
@@ -325,5 +330,4 @@ public class WebViewActivity extends AppCompatActivity {
             }
         }
     }
-
 }
